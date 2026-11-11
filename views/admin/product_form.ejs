@@ -1,0 +1,75 @@
+<%- include('../partials/header') %>
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-user">
+      <div class="admin-avatar"><%= user.name[0] %></div>
+      <div>
+        <strong><%= user.name %></strong>
+        <span><%= user.position %></span>
+      </div>
+    </div>
+    <nav class="admin-nav">
+      <a href="/admin">📊 Огляд</a>
+      <a href="/admin/orders">🧾 Замовлення</a>
+      <a href="/admin/products" class="active">📦 Товари</a>
+      <% if (user.role === 'director') { %><a href="/admin/employees">👥 Працівники</a><% } %>
+      <a href="/catalog">🛒 Відкрити сайт</a>
+      <a href="/logout">🚪 Вийти</a>
+    </nav>
+  </aside>
+
+  <div class="admin-content">
+    <h1 class="page-title"><%= product ? 'Редагування товару' : 'Новий товар' %></h1>
+
+    <form method="POST" action="<%= product ? '/admin/products/' + product.id : '/admin/products' %>" class="checkout-form card">
+      <label>Назва товару *
+        <input type="text" name="name" required value="<%= product ? product.name : '' %>" placeholder="Крупа гречана «Столична», 1 кг">
+      </label>
+      <label>Категорія
+        <select name="category_id">
+          <option value="">— без категорії —</option>
+          <% categories.forEach(c => { %>
+            <option value="<%= c.id %>" <%= product && product.category_id === c.id ? 'selected' : '' %>><%= c.icon %> <%= c.name %></option>
+          <% }) %>
+        </select>
+      </label>
+      <label>Опис
+        <textarea name="description" rows="3"><%= product ? product.description : '' %></textarea>
+      </label>
+      <div class="form-row">
+        <label>Роздрібна ціна, грн *
+          <input type="number" step="0.01" min="0" name="price_retail" required value="<%= product ? Number(product.price_retail) : '' %>">
+        </label>
+        <label>Оптова ціна, грн *
+          <input type="number" step="0.01" min="0" name="price_wholesale" required value="<%= product ? Number(product.price_wholesale) : '' %>">
+        </label>
+      </div>
+      <div class="form-row">
+        <label>Мін. к-сть для опту
+          <input type="number" min="1" name="wholesale_min" value="<%= product ? product.wholesale_min : 10 %>">
+        </label>
+        <label>Запас на складі
+          <input type="number" min="0" name="stock" value="<%= product ? product.stock : 0 %>">
+        </label>
+        <label>Одиниця виміру
+          <input type="text" name="unit" value="<%= product ? product.unit : 'шт' %>">
+        </label>
+      </div>
+      <div class="form-row">
+        <label>Емодзі-зображення
+          <input type="text" name="icon" value="<%= product ? product.icon : '📦' %>" maxlength="8">
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" name="featured" <%= product && product.featured ? 'checked' : '' %>> Хіт продажів (на головній)
+        </label>
+      </div>
+      <div class="cart-actions">
+        <a href="/admin/products" class="btn btn-outline">← Скасувати</a>
+        <button class="btn btn-primary btn-lg">Зберегти товар</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

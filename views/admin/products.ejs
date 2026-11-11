@@ -1,0 +1,53 @@
+<%- include('../partials/header') %>
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-user">
+      <div class="admin-avatar"><%= user.name[0] %></div>
+      <div>
+        <strong><%= user.name %></strong>
+        <span><%= user.position %></span>
+      </div>
+    </div>
+    <nav class="admin-nav">
+      <a href="/admin">📊 Огляд</a>
+      <a href="/admin/orders">🧾 Замовлення</a>
+      <a href="/admin/products" class="active">📦 Товари</a>
+      <% if (user.role === 'director') { %><a href="/admin/employees">👥 Працівники</a><% } %>
+      <a href="/catalog">🛒 Відкрити сайт</a>
+      <a href="/logout">🚪 Вийти</a>
+    </nav>
+  </aside>
+
+  <div class="admin-content">
+    <div class="section-head">
+      <h1 class="page-title">Товари (<%= products.length %>)</h1>
+      <a href="/admin/products/new" class="btn btn-primary">+ Додати товар</a>
+    </div>
+
+    <div class="card">
+      <table class="table">
+        <thead><tr><th>Товар</th><th>Категорія</th><th>Роздріб</th><th>Опт</th><th>Запас</th><th></th></tr></thead>
+        <tbody>
+          <% products.forEach(p => { %>
+            <tr>
+              <td class="td-product"><span class="td-icon"><%= p.icon %></span><span><%= p.name %></span></td>
+              <td><%= p.category_name || '—' %></td>
+              <td><%= Number(p.price_retail) %> грн</td>
+              <td><%= Number(p.price_wholesale) %> грн</td>
+              <td><%= p.stock %></td>
+              <td class="td-actions">
+                <a href="/admin/products/<%= p.id %>/edit" class="btn btn-outline btn-sm">✏️</a>
+                <form method="POST" action="/admin/products/<%= p.id %>/delete" class="inline-form" onsubmit="return confirm('Видалити товар «<%= p.name %>»?')">
+                  <button class="btn btn-danger btn-sm">🗑</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

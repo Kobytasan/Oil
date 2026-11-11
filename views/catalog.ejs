@@ -1,0 +1,64 @@
+<%- include('partials/header') %>
+
+<h1 class="page-title">Каталог продукції</h1>
+<p class="page-subtitle">Оптово-роздрібний асортимент ТОВ «Оліс». Оптова ціна діє від зазначеної мінімальної кількості.</p>
+
+<div class="catalog-layout">
+  <aside class="catalog-sidebar">
+    <h3>Категорії</h3>
+    <nav class="side-nav">
+      <a href="/catalog" class="<%= !currentCat ? 'active' : '' %>">Усі товари</a>
+      <% categories.forEach(c => { %>
+        <a href="/catalog?cat=<%= c.id %>" class="<%= currentCat === c.id ? 'active' : '' %>">
+          <%= c.icon %> <%= c.name %>
+        </a>
+      <% }) %>
+    </nav>
+    <div class="side-box">
+      <h4>💡 Як працює опт</h4>
+      <p>Додайте до кошика 10 і більше одиниць однієї позиції — система автоматично застосує оптову ціну.</p>
+    </div>
+  </aside>
+
+  <div class="catalog-content">
+    <form method="GET" action="/catalog" class="search-form">
+      <% if (currentCat) { %><input type="hidden" name="cat" value="<%= currentCat %>"><% } %>
+      <input type="text" name="q" value="<%= q %>" placeholder="Пошук товару за назвою…">
+      <button class="btn btn-primary">Знайти</button>
+    </form>
+
+    <% if (!products.length) { %>
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <p>Товарів не знайдено. Спробуйте змінити пошуковий запит або категорію.</p>
+        <a href="/catalog" class="btn btn-outline">Скинути фільтри</a>
+      </div>
+    <% } else { %>
+      <p class="results-count">Знайдено товарів: <strong><%= products.length %></strong></p>
+      <div class="grid grid-3">
+        <% products.forEach(p => { %>
+          <div class="product-card">
+            <a href="/product/<%= p.id %>" class="product-icon"><%= p.icon %></a>
+            <a href="/product/<%= p.id %>" class="product-name"><%= p.name %></a>
+            <span class="product-cat"><%= p.category_name || '' %></span>
+            <div class="product-prices">
+              <span class="price price-retail"><%= Number(p.price_retail) %> грн</span>
+              <span class="price price-wholesale">опт <%= Number(p.price_wholesale) %> грн · від <%= p.wholesale_min %> шт.</span>
+            </div>
+            <% if (p.stock > 0) { %>
+              <form method="POST" action="/cart/add/<%= p.id %>" class="add-form">
+                <input type="hidden" name="back" value="/catalog">
+                <input type="number" name="qty" value="1" min="1" max="<%= p.stock %>">
+                <button class="btn btn-primary btn-sm">🛒</button>
+              </form>
+            <% } else { %>
+              <span class="stock-out">Немає в наявності</span>
+            <% } %>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

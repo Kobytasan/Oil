@@ -1,0 +1,80 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+  <div class="hero-text">
+    <span class="hero-tag">Оптово-роздрібна торгівля з 2004 року</span>
+    <h1>Продукти харчування та госптовари <span class="accent">оптом і в роздріб</span></h1>
+    <p>
+      Понад 2 000 позицій у каталозі, зручні ціни для оптових покупців
+      (від 10 одиниць товару) та роздрібні ціни для кожного.
+    </p>
+    <div class="hero-actions">
+      <a href="/catalog" class="btn btn-primary btn-lg">Перейти до каталогу</a>
+      <a href="/cart" class="btn btn-outline btn-lg">Оформити замовлення</a>
+    </div>
+    <div class="hero-stats">
+      <div><strong>2 000+</strong><span>товарів</span></div>
+      <div><strong>300+</strong><span>постійних клієнтів</span></div>
+      <div><strong>20 років</strong><span>на ринку</span></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-card">🛒<span>Онлайн-замовлення 24/7</span></div>
+    <div class="hero-card">🚚<span>Доставка по Україні</span></div>
+    <div class="hero-card">🏷️<span>Оптові ціни від 10 шт.</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title">Категорії товарів</h2>
+  <div class="grid grid-3">
+    <% categories.forEach(c => { %>
+      <a href="/catalog?cat=<%= c.id %>" class="category-card">
+        <span class="category-icon"><%= c.icon %></span>
+        <span class="category-name"><%= c.name %></span>
+        <span class="category-link">Переглянути →</span>
+      </a>
+    <% }) %>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-head">
+    <h2 class="section-title">Хіти продажів</h2>
+    <a href="/catalog" class="section-link">Увесь каталог →</a>
+  </div>
+  <div class="grid grid-4">
+    <% featured.forEach(p => { %>
+      <div class="product-card">
+        <a href="/product/<%= p.id %>" class="product-icon"><%= p.icon %></a>
+        <a href="/product/<%= p.id %>" class="product-name"><%= p.name %></a>
+        <span class="product-cat"><%= p.category_name %></span>
+        <div class="product-prices">
+          <span class="price price-retail"><%= Number(p.price_retail) %> грн</span>
+          <span class="price price-wholesale">опт <%= Number(p.price_wholesale) %> грн</span>
+        </div>
+        <form method="POST" action="/cart/add/<%= p.id %>">
+          <input type="hidden" name="back" value="/">
+          <button class="btn btn-primary btn-block btn-sm">До кошика</button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+</section>
+
+<section class="section info-band">
+  <div class="info-card">
+    <h3>🏢 Оптовим покупцям</h3>
+    <p>Магазинам, кафе та закладам — автоматична оптова ціна при замовленні від 10 одиниць однієї позиції.</p>
+  </div>
+  <div class="info-card">
+    <h3>🏬 Роздрібним покупцям</h3>
+    <p>Замовляйте будь-яку кількість товару онлайн — доставимо кур'єром або у відділення перевізника.</p>
+  </div>
+  <div class="info-card">
+    <h3>📋 Облік і контроль</h3>
+    <p>Кожне замовлення фіксується в системі, а працівники підприємства ведуть облік у власній панелі керування.</p>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

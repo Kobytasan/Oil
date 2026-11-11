@@ -1,0 +1,69 @@
+<%- include('partials/header') %>
+
+<h1 class="page-title">Оформлення замовлення</h1>
+
+<% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-error">⚠️ <%= error %></div>
+<% } %>
+
+<div class="checkout-layout">
+  <form method="POST" action="/checkout" class="checkout-form card">
+    <h3>Дані покупця</h3>
+    <label>ПІБ покупця *
+      <input type="text" name="customer_name" required value="<%= (typeof form !== 'undefined' && form) ? form.customer_name : '' %>" placeholder="Петренко Марія Іванівна">
+    </label>
+    <label>Телефон *
+      <input type="tel" name="phone" required value="<%= (typeof form !== 'undefined' && form) ? form.phone : '' %>" placeholder="+380 __ ___ __ __">
+    </label>
+    <label>Назва підприємства (для оптових покупців)
+      <input type="text" name="company" value="<%= (typeof form !== 'undefined' && form) ? form.company : '' %>" placeholder="ТОВ «Магазин „Джерело“»">
+    </label>
+
+    <h3>Доставка</h3>
+    <label>Місто
+      <input type="text" name="city" value="<%= (typeof form !== 'undefined' && form) ? form.city : '' %>" placeholder="Вінниця">
+    </label>
+    <label>Тип доставки
+      <select name="delivery">
+        <option value="Самовивіз зі складу">Самовивіз зі складу (м. Вінниця)</option>
+        <option value="Кур'єр">Кур'єр</option>
+        <option value="Нова пошта">Нова пошта</option>
+        <option value="Укрпошта">Укрпошта</option>
+      </select>
+    </label>
+    <label>Адреса / № відділення
+      <input type="text" name="address" value="<%= (typeof form !== 'undefined' && form) ? form.address : '' %>" placeholder="вул. Соборна, 24">
+    </label>
+
+    <h3>Оплата</h3>
+    <label>Спосіб оплати
+      <select name="payment">
+        <option value="Готівка">Готівка при отриманні</option>
+        <option value="Картка онлайн">Картка онлайн</option>
+        <option value="Безготівковий розрахунок">Безготівковий розрахунок (для підприємств)</option>
+      </select>
+    </label>
+    <label>Коментар до замовлення
+      <textarea name="comment" rows="3" placeholder="Наприклад: зателефонуйте перед відвантаженням"><%= (typeof form !== 'undefined' && form) ? (form.comment || '') : '' %></textarea>
+    </label>
+
+    <button class="btn btn-primary btn-lg btn-block">Підтвердити замовлення</button>
+  </form>
+
+  <aside class="checkout-summary card">
+    <h3>Ваше замовлення</h3>
+    <% items.forEach(it => { %>
+      <div class="summary-row">
+        <span><%= it.product.icon %> <%= it.product.name %> × <%= it.qty %></span>
+        <strong><%= it.sum %> грн</strong>
+      </div>
+    <% }) %>
+    <div class="summary-row summary-total">
+      <span>До сплати:</span>
+      <strong><%= total %> грн</strong>
+    </div>
+    <p class="summary-note">Ціни перераховані автоматично: оптові — від <%= items[0].product.wholesale_min %> шт. однієї позиції.</p>
+  </aside>
+</div>
+
+<%- include('partials/footer') %>

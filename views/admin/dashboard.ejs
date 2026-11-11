@@ -1,0 +1,77 @@
+<%- include('../partials/header') %>
+
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="admin-user">
+      <div class="admin-avatar"><%= user.name[0] %></div>
+      <div>
+        <strong><%= user.name %></strong>
+        <span><%= user.position %> · <%= user.role === 'director' ? 'директор' : user.role === 'manager' ? 'менеджер' : 'працівник' %></span>
+      </div>
+    </div>
+    <nav class="admin-nav">
+      <a href="/admin" class="<%= path === '/admin' ? 'active' : '' %>">📊 Огляд</a>
+      <a href="/admin/orders" class="<%= path.startsWith('/admin/orders') ? 'active' : '' %>">🧾 Замовлення</a>
+      <% if (user.role === 'director' || user.role === 'manager') { %>
+        <a href="/admin/products" class="<%= path.startsWith('/admin/products') ? 'active' : '' %>">📦 Товари</a>
+      <% } %>
+      <% if (user.role === 'director') { %>
+        <a href="/admin/employees" class="<%= path.startsWith('/admin/employees') ? 'active' : '' %>">👥 Працівники</a>
+      <% } %>
+      <a href="/catalog">🛒 Відкрити сайт</a>
+      <a href="/logout">🚪 Вийти</a>
+    </nav>
+  </aside>
+
+  <div class="admin-content">
+    <h1 class="page-title">Панель керування</h1>
+    <p class="page-subtitle">Коротка статистика роботи інтернет-магазину «Оліс».</p>
+
+    <div class="grid grid-4">
+      <div class="stat-card"><span class="stat-value"><%= counts.products %></span><span>товарів у каталозі</span></div>
+      <div class="stat-card"><span class="stat-value"><%= counts.orders %></span><span>усіх замовлень</span></div>
+      <div class="stat-card stat-accent"><span class="stat-value"><%= counts.newOrders %></span><span>нових замовлень</span></div>
+      <div class="stat-card"><span class="stat-value"><%= counts.revenue %> грн</span><span>загальна сума продажів</span></div>
+    </div>
+
+    <% if (user.role === 'director') { %>
+    <div class="grid grid-2 admin-quick">
+      <div class="info-card">
+        <h3>📦 Керування каталогом</h3>
+        <p>Додавайте, редагуйте та видаляйте позиції товарів.</p>
+        <a href="/admin/products" class="btn btn-outline btn-sm">Перейти</a>
+      </div>
+      <div class="info-card">
+        <h3>👥 Персонал (<%= counts.employees %>)</h3>
+        <p>Облікові записи працівників та їхні права доступу.</p>
+        <a href="/admin/employees" class="btn btn-outline btn-sm">Перейти</a>
+      </div>
+    </div>
+    <% } %>
+
+    <h2 class="section-title">Останні замовлення</h2>
+    <div class="card">
+      <% if (!latest.length) { %>
+        <p class="empty-inline">Замовлень поки немає. Оформіть тестове замовлення через сайт.</p>
+      <% } else { %>
+        <table class="table">
+          <thead><tr><th>№</th><th>Покупець</th><th>Дата</th><th>Сума</th><th>Статус</th><th></th></tr></thead>
+          <tbody>
+            <% latest.forEach(o => { %>
+              <tr>
+                <td>№<%= o.id %></td>
+                <td><%= o.customer_name %></td>
+                <td><%= new Date(o.created_at).toLocaleString('uk-UA') %></td>
+                <td><%= Number(o.total) %> грн</td>
+                <td><span class="status status-<%= o.status %>"><%= o.status %></span></td>
+                <td><a href="/admin/orders/<%= o.id %>" class="btn btn-outline btn-sm">Відкрити</a></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
