@@ -59,7 +59,8 @@ async function cartData(req) {
   const cart = req.session.cart || [];
   if (!cart.length) return { items: [], total: 0, count: 0 };
   const ids = cart.map((i) => i.id);
-  const { rows } = await db.query('SELECT * FROM products WHERE id = ANY($1)', [ids]);
+  const placeholders = ids.map((_, i) => '$' + (i + 1)).join(',');
+  const { rows } = await db.query(`SELECT * FROM products WHERE id IN (${placeholders})`, ids);
   const items = cart
     .map((i) => {
       const p = rows.find((r) => r.id === i.id);

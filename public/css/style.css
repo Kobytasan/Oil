@@ -52,6 +52,10 @@ img { max-width: 100%; }
 .main-nav a { padding: 8px 14px; border-radius: 10px; font-weight: 600; font-size: 15px; color: var(--muted); transition: .15s; }
 .main-nav a:hover { color: var(--primary-dark); background: var(--primary-light); }
 .main-nav a.active { color: var(--primary-dark); background: var(--primary-light); }
+.main-nav a.btn-primary { color: #fff; }
+.main-nav a.btn-primary:hover { background: var(--primary-dark); color: #fff; }
+.main-nav a.btn-outline { color: var(--text); border: 1.5px solid var(--border); }
+.main-nav a.btn-outline:hover { color: var(--primary-dark); background: var(--primary-light); border-color: var(--primary); }
 .badge {
   background: var(--accent); color: #fff; border-radius: 999px;
   font-size: 12px; padding: 1px 8px; margin-left: 2px;
